@@ -25,13 +25,9 @@ let mon = month[d.getMonth()];
 
 const [message,setmesssage]=useState("");
 
-// const onslotchange=(e)=>{
-//     let slotid=document.getElementsByName("slot");
-//         console.log(slotid);
-// }
 
 function validateForm() {
-    // Check if the First Name is an Empty string or not.
+    // Check if the Name is an Empty string or not.
 
     if (name.length === 0) {
       setmesssage('Name can not be empty')
@@ -62,8 +58,8 @@ function validateForm() {
         setmesssage("Yoga classes is only for persons of age 18 to 65")
         return false;
     }
-
-    setjoin(true);
+    return true;
+    // setjoin(true);
   }
 
 
@@ -80,17 +76,25 @@ function validateForm() {
 
         const val=validateForm();
         setprofile(true);
-        if(val && join){
+        if(val){
         // setjoin(true);
         const response=await axios.post("http://localhost:4000/userdata",{name,dob,mob,slot})
+        
         console.log(response);
+        if(response.data==="Paid"){
+            setjoin(false);
+            setmesssage("User linked to this mobile numer has paid this month's fees")
+        }
+        else{
+            setjoin(true);
+        }
     };
         
 
     }
     return (
-        <div>
-        <div>
+        <div className="full">
+        <div className="curr">
         {!join &&
         <div>
         <h2>Fill the form to Join Yoga classes for {mon}</h2>
@@ -105,12 +109,10 @@ function validateForm() {
             <div className="mob">
             <label>Mobile Number</label>
             <input type="tel" id="phone" name="mob" required pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="enter 10 digit number"   onChange={(e)=>setmob(e.target.value)}/>
-            {/* <input name="mob" placeholder="" minLength={10} maxLength={10} onChange={(e)=>setmob(e.target.value)} ></input> */}
             </div>
 
            <div className="dob">
            <label>Date of Birth</label>
-            {/* <input name="age" placeholder="" onChange={(e)=>setage(e.target.value)} ></input> */}
             <input type="date" id="start" name="dob" required  min="1960-01-01" max="2023-12-31" onChange={(e)=>setdob(e.target.value)} />
            </div>
 
@@ -156,7 +158,7 @@ function validateForm() {
 }
 
 {join && profile &&
-        <div>
+        <div >
         <Elements stripe={stripePromise}>
         <PaymentForm mob={mob} />
     </Elements>
