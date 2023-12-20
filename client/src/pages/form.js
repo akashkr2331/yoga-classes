@@ -54,7 +54,7 @@ function validateForm() {
     var age = Math.abs(year - 1970);  
     console.log(age)
 
-    if(age<18 && age>65){
+    if(age<18 || age>65){
         setmesssage("Yoga classes is only for persons of age 18 to 65")
         return false;
     }
